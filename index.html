@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>《禮記》選 · 曲禮 —— 禮制互動卷軸</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-tc/chinese-traditional-400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-tc/chinese-traditional-700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ma-shan-zheng/index.css">
+<style>
+/* ============ 基本設定 ============ */
+:root{
+  --paper:#f4eddd;
+  --paper2:#ece1c9;
+  --paper3:#e2d5ba;
+  --ink:#221d17;
+  --ink2:#4c4238;
+  --ink3:#7a6c5b;
+  --cinnabar:#9c2b21;
+  --cinnabar2:#bd4433;
+  --gold:#a8823f;
+  --gold2:#cdb071;
+  --jade:#3d6b5b;
+  --indigo:#2b3a56;
+  --shadow:0 10px 30px rgba(60,42,20,.14);
+  --corner:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Cpath d='M3 27 V3 H27 V20 H10 V10 H20' fill='none' stroke='%23a8823f' stroke-width='1.5' stroke-opacity='.65'/%3E%3C/svg%3E");
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:78px}
+body{
+  font-family:"Noto Serif TC","Songti TC","STSong","PMingLiU",serif;
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:var(--grain),
+    radial-gradient(1200px 600px at 12% -5%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(900px 500px at 95% 10%, rgba(168,130,63,.12), transparent 60%),
+    radial-gradient(1000px 700px at 50% 110%, rgba(61,107,91,.10), transparent 60%);
+  line-height:1.95;
+  letter-spacing:.04em;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--cinnabar);color:#f7efdd}
+img,svg{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+/* ============ 開卷動畫 ============ */
+#curtain{position:fixed;inset:0;z-index:9999;display:flex;pointer-events:none}
+#curtain .half{
+  width:50%;height:100%;position:relative;
+  background:linear-gradient(90deg,#e6d9bd,#f3ebd8 40%,#ded0b1);
+  background-image:var(--grain);
+  animation:unroll 1.5s cubic-bezier(.7,0,.3,1) forwards;
+  box-shadow:inset 0 0 60px rgba(90,66,32,.25);
+}
+#curtain .half.r{animation-name:unrollR}
+#curtain .half::after{
+  content:"";position:absolute;top:0;bottom:0;width:22px;
+  background:linear-gradient(90deg,#6a4a25,#a97b41 35%,#d9b379 50%,#8a5f2d 70%,#5c3f1e);
+  box-shadow:0 0 18px rgba(50,30,10,.5);
+}
+#curtain .half.l::after{right:-11px}
+#curtain .half.r::after{left:-11px}
+@keyframes unroll{to{transform:translateX(-101%)}}
+@keyframes unrollR{to{transform:translateX(101%)}}
+#curtain.gone{display:none}
+
+/* ============ 進度條 ============ */
+#bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:1000;
+  background:linear-gradient(90deg,var(--cinnabar),var(--gold2));box-shadow:0 0 8px rgba(156,43,33,.5)}
+
+/* ============ 導覽 ============ */
+header{position:sticky;top:0;z-index:900;background:rgba(34,29,23,.95);
+  border-bottom:2px solid var(--gold);box-shadow:0 6px 22px rgba(30,20,5,.28)}
+.navwrap{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:0 16px}
+.brand{display:flex;align-items:center;gap:10px;padding:10px 0;flex:0 0 auto}
+.brand .sealmini{width:32px;height:32px;background:var(--cinnabar);color:#f7ecd8;display:grid;place-items:center;
+  font-family:"Ma Shan Zheng",serif;font-size:20px;border-radius:4px;box-shadow:0 0 0 1px rgba(255,255,255,.25) inset;transform:rotate(-4deg)}
+.brand b{color:#efe2c6;font-weight:700;font-size:15px;letter-spacing:.18em;white-space:nowrap}
+nav{flex:1 1 auto;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav ul{display:flex;list-style:none;gap:2px;justify-content:flex-end;min-width:max-content}
+nav a{display:block;padding:16px 12px;color:#d8c9a8;font-size:14px;letter-spacing:.12em;position:relative;white-space:nowrap;transition:.25s}
+nav a::after{content:"";position:absolute;left:12px;right:12px;bottom:9px;height:2px;background:var(--cinnabar2);
+  transform:scaleX(0);transition:transform .3s}
+nav a:hover{color:#fff5e0}
+nav a.on{color:#fff5e0}
+nav a.on::after{transform:scaleX(1)}
+#menuBtn{display:none;background:none;border:1px solid var(--gold);color:#efe2c6;padding:7px 11px;border-radius:3px;font-size:13px}
+
+/* ============ 卷首 ============ */
+.hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;
+  padding:70px 20px 60px;overflow:hidden;text-align:center}
+.hero::before{content:"禮";position:absolute;font-family:"Ma Shan Zheng",serif;font-size:min(58vh,540px);
+  color:rgba(156,43,33,.055);line-height:1;top:50%;left:50%;transform:translate(-50%,-52%);pointer-events:none}
+.hero .cloudL,.hero .cloudR{position:absolute;width:280px;opacity:.32;pointer-events:none}
+.hero .cloudL{left:-40px;top:12%}
+.hero .cloudR{right:-40px;bottom:10%;transform:scaleX(-1)}
+.heroin{position:relative;z-index:2;max-width:880px}
+.seal{width:86px;height:86px;margin:0 auto 22px;background:var(--cinnabar);color:#f8efdc;border-radius:6px;
+  display:grid;place-items:center;font-family:"Ma Shan Zheng",serif;font-size:30px;line-height:1.15;
+  transform:rotate(-5deg);box-shadow:0 6px 20px rgba(120,30,20,.35), inset 0 0 0 3px rgba(255,240,220,.35);
+  letter-spacing:0;text-align:center;padding:6px}
+.hero h1{font-family:"Ma Shan Zheng","Noto Serif TC",serif;font-size:clamp(42px,7.4vw,86px);letter-spacing:.16em;
+  color:var(--ink);text-shadow:0 2px 0 rgba(255,255,255,.4)}
+.hero h1 span{color:var(--cinnabar)}
+.hero .sub{margin-top:10px;font-size:clamp(15px,2.1vw,20px);letter-spacing:.34em;color:var(--ink2)}
+.hero .three{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:30px auto 0}
+.hero .three span{border:1px solid var(--gold);color:var(--ink2);padding:8px 18px;font-size:14px;letter-spacing:.2em;
+  background:rgba(255,252,244,.5);border-radius:2px}
+.hero .meta{margin-top:26px;color:var(--ink3);font-size:14px;letter-spacing:.24em}
+.herobtns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 30px;font-size:15px;letter-spacing:.22em;
+  border-radius:2px;transition:.3s;border:1px solid var(--cinnabar);background:var(--cinnabar);color:#f9f1e0;
+  box-shadow:0 6px 18px rgba(140,35,25,.25)}
+.btn:hover{background:#82201a;transform:translateY(-2px);box-shadow:0 10px 24px rgba(140,35,25,.35)}
+.btn.ghost{background:transparent;color:var(--cinnabar);border-color:var(--gold)}
+.btn.ghost:hover{background:rgba(168,130,63,.14);color:#7c1d16}
+.scrollhint{margin-top:46px;color:var(--ink3);font-size:13px;letter-spacing:.3em;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(8px);opacity:1}}
+
+/* ============ 章節通用 ============ */
+main{position:relative}
+.juan{max-width:1140px;margin:0 auto;padding:76px 22px}
+.juanhead{display:flex;align-items:flex-end;gap:20px;margin-bottom:8px}
+.juanhead .num{flex:0 0 auto;writing-mode:vertical-rl;text-orientation:upright;background:var(--ink);color:#f0e3c8;
+  font-family:"Ma Shan Zheng",serif;font-size:15px;letter-spacing:.3em;padding:12px 8px;border-radius:3px;
+  box-shadow:0 4px 14px rgba(40,28,10,.3)}
+.juanhead h2{font-family:"Ma Shan Zheng","Noto Serif TC",serif;font-size:clamp(32px,5vw,50px);letter-spacing:.14em;line-height:1.3}
+.juanhead p{color:var(--ink3);font-size:15px;letter-spacing:.2em;margin-top:4px}
+.lead{max-width:840px;color:var(--ink2);font-size:16.5px;margin:18px 0 34px;padding-left:16px;border-left:3px solid var(--gold)}
+.orn{width:min(420px,80%);height:22px;margin:0 auto 44px;stroke:var(--gold);fill:var(--gold);opacity:.8}
+.orn line{stroke-width:1}
+.rule2{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:44px 0;opacity:.55}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* 卡片 */
+.card{position:relative;background:linear-gradient(180deg,rgba(255,252,243,.82),rgba(246,238,220,.72));
+  border:1px solid rgba(168,130,63,.42);border-radius:3px;padding:26px 26px 24px;box-shadow:var(--shadow)}
+.card::before,.card::after{content:"";position:absolute;width:22px;height:22px;background-image:var(--corner);
+  background-size:contain;background-repeat:no-repeat;opacity:.85}
+.card::before{top:7px;left:7px}
+.card::after{bottom:7px;right:7px;transform:rotate(180deg)}
+.card h3{font-size:20px;letter-spacing:.14em;color:var(--cinnabar);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.card h3 .idx{font-family:"Ma Shan Zheng",serif;background:var(--cinnabar);color:#f8efdc;width:28px;height:28px;
+  display:grid;place-items:center;font-size:15px;border-radius:3px;flex:0 0 auto}
+.card h4{font-size:16px;letter-spacing:.16em;color:var(--indigo);margin:18px 0 8px}
+.card p,.card li{color:var(--ink2);font-size:15.5px}
+.card ul{list-style:none}
+.card ul li{position:relative;padding-left:20px;margin:7px 0}
+.card ul li::before{content:"";position:absolute;left:2px;top:.85em;width:7px;height:7px;background:var(--gold);
+  transform:rotate(45deg);opacity:.8}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.quote{background:rgba(156,43,33,.06);border-left:3px solid var(--cinnabar);padding:14px 18px;margin:14px 0;
+  color:#6d231c;font-size:16px;letter-spacing:.06em}
+.tag{display:inline-block;font-size:12px;letter-spacing:.18em;padding:3px 10px;border:1px solid var(--gold);
+  color:var(--gold);border-radius:2px;background:rgba(168,130,63,.08)}
+.tag.red{border-color:var(--cinnabar);color:var(--cinnabar);background:rgba(156,43,33,.08)}
+.tag.jade{border-color:var(--jade);color:var(--jade);background:rgba(61,107,91,.08)}
+
+/* 分頁籤 */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab{background:transparent;border:1px solid rgba(168,130,63,.5);color:var(--ink2);padding:9px 20px;font-size:14.5px;
+  letter-spacing:.18em;border-radius:2px;transition:.28s}
+.tab:hover{background:rgba(168,130,63,.14)}
+.tab.on{background:var(--ink);color:#f2e6cc;border-color:var(--ink)}
+.pane{display:none;animation:fade .45s ease}
+.pane.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* 定義清單 */
+.deflist{display:grid;gap:12px}
+.defitem{border:1px solid rgba(168,130,63,.35);background:rgba(255,253,247,.6);border-radius:3px;overflow:hidden}
+.defitem button{width:100%;display:flex;align-items:center;gap:12px;background:none;border:none;padding:14px 16px;
+  text-align:left;font-size:15.5px;color:var(--ink);letter-spacing:.06em;transition:.25s}
+.defitem button:hover{background:rgba(168,130,63,.1)}
+.defitem .dot{width:8px;height:8px;background:var(--cinnabar);transform:rotate(45deg);flex:0 0 auto}
+.defitem .ex{margin-left:auto;color:var(--ink3);font-size:13.5px;letter-spacing:.1em}
+.defitem .body{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.defitem.open .body{max-height:280px}
+.defitem .body>div{padding:0 18px 16px 36px;color:var(--ink2);font-size:15px;border-top:1px dashed rgba(168,130,63,.4);margin-top:2px;padding-top:12px}
+.defitem.open button .ex{color:var(--cinnabar)}
+
+/* 功用四象 */
+.fngrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fn{border:1px solid rgba(168,130,63,.4);background:rgba(255,252,244,.6);padding:22px 16px;text-align:center;
+  border-radius:3px;transition:.35s;cursor:default}
+.fn:hover{transform:translateY(-6px);background:rgba(156,43,33,.06);border-color:var(--cinnabar);box-shadow:0 12px 24px rgba(90,60,20,.16)}
+.fn .ch{font-family:"Ma Shan Zheng",serif;font-size:44px;color:var(--cinnabar);line-height:1}
+.fn b{display:block;margin:10px 0 6px;letter-spacing:.24em;font-size:15px}
+.fn span{color:var(--ink3);font-size:13.5px;letter-spacing:.06em}
+
+/* 字源圖 */
+.origrid{display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+.zi{display:flex;flex-direction:column;gap:14px;align-items:center}
+.zibox{width:100%;border:1px solid rgba(168,130,63,.4);background:rgba(255,252,244,.7);padding:16px;border-radius:3px;text-align:center}
+.zibox .g{font-family:"Ma Shan Zheng",serif;font-size:56px;color:var(--ink);line-height:1.1}
+.zibox .cap{color:var(--ink3);font-size:13px;letter-spacing:.16em;margin-top:6px}
+.flowarrow{color:var(--cinnabar);font-size:22px;line-height:1}
+
+/* 時間軸 */
+.tl{position:relative;margin:26px 0 6px;padding-left:0}
+.tl::before{content:"";position:absolute;left:15px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,var(--cinnabar),var(--gold),var(--jade))}
+.tli{position:relative;padding:0 0 26px 56px}
+.tli .pt{position:absolute;left:5px;top:2px;width:22px;height:22px;border-radius:50%;background:var(--paper);
+  border:2px solid var(--cinnabar);display:grid;place-items:center;font-size:10px;color:var(--cinnabar)}
+.tli .pt::after{content:"";width:8px;height:8px;background:var(--cinnabar);border-radius:50%}
+.tli h4{font-size:18px;color:var(--ink);letter-spacing:.16em;margin-bottom:2px}
+.tli .era{font-family:"Ma Shan Zheng",serif;color:var(--cinnabar);font-size:14px;letter-spacing:.2em;margin-right:8px}
+.tli p{color:var(--ink2);font-size:15px}
+.tli:hover .pt{border-color:var(--gold);transform:scale(1.14);transition:.3s}
+
+/* 三禮 */
+.sanli{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.sanli .card{padding:22px 20px;text-align:center;transition:.35s}
+.sanli .card:hover{transform:translateY(-5px)}
+.sanli .bk{font-family:"Ma Shan Zheng",serif;font-size:30px;color:var(--indigo);letter-spacing:.1em}
+.sanli .role{display:inline-block;margin:8px 0 10px;font-size:12.5px;letter-spacing:.2em;padding:3px 10px;
+  border:1px solid var(--jade);color:var(--jade);border-radius:2px}
+
+/* 成書流程 */
+.bookflow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-top:14px}
+.bnode{flex:1 1 160px;border:1px solid rgba(168,130,63,.45);background:rgba(255,253,247,.72);padding:14px;
+  border-radius:3px;position:relative;transition:.3s}
+.bnode:hover{border-color:var(--cinnabar);background:rgba(156,43,33,.06)}
+.bnode b{display:block;font-size:15px;color:var(--cinnabar);letter-spacing:.1em}
+.bnode span{font-size:13.5px;color:var(--ink2);letter-spacing:.04em}
+.barrow{align-self:center;color:var(--gold);font-size:20px;flex:0 0 auto}
+
+/* 婚禮六禮 */
+.six{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+.flip{perspective:1000px;height:190px;cursor:pointer}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .fc,.flip .bc{position:absolute;inset:0;backface-visibility:hidden;border-radius:3px;padding:18px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flip .fc{background:linear-gradient(160deg,#a8352a,#7d1d16);color:#f9ecd8;border:1px solid #d9a55f;
+  box-shadow:0 8px 22px rgba(120,30,20,.28)}
+.flip .fc .no{font-size:12px;letter-spacing:.3em;opacity:.75}
+.flip .fc .nm{font-family:"Ma Shan Zheng",serif;font-size:38px;margin:6px 0 4px;letter-spacing:.1em}
+.flip .fc .hint{font-size:12px;opacity:.7;letter-spacing:.16em}
+.flip .bc{background:rgba(255,253,247,.94);border:1px solid var(--gold);color:var(--ink2);font-size:14.5px;
+  transform:rotateY(180deg);line-height:1.85;padding:20px}
+.flip .bc b{color:var(--cinnabar);display:block;margin-bottom:6px;letter-spacing:.14em}
+
+/* 喪禮流程 */
+.steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.step{flex:1 1 110px;border:1px solid rgba(43,58,86,.35);background:rgba(255,253,247,.7);color:var(--ink2);
+  padding:12px 8px;text-align:center;border-radius:3px;font-size:15px;letter-spacing:.14em;transition:.3s;position:relative}
+.step:hover{border-color:var(--indigo)}
+.step.on{background:var(--indigo);color:#f0eadb;border-color:var(--indigo);box-shadow:0 8px 18px rgba(40,55,85,.28)}
+.step em{display:block;font-style:normal;font-size:11px;letter-spacing:.2em;opacity:.7;margin-top:3px}
+.stepbox{margin-top:18px;border:1px dashed rgba(43,58,86,.45);background:rgba(43,58,86,.05);padding:20px;border-radius:3px;min-height:96px}
+.stepbox h5{font-size:19px;color:var(--indigo);letter-spacing:.2em;margin-bottom:6px}
+
+/* 五服表 */
+.wufu{width:100%;border-collapse:collapse;margin-top:14px;font-size:14.8px}
+.wufu th{background:var(--ink);color:#f0e4ca;padding:11px 10px;letter-spacing:.16em;font-weight:400;font-size:14px}
+.wufu td{border-bottom:1px solid rgba(168,130,63,.3);padding:12px 10px;color:var(--ink2);text-align:center}
+.wufu tr{transition:.25s;cursor:pointer}
+.wufu tbody tr:hover,.wufu tbody tr.on{background:rgba(156,43,33,.09)}
+.wufu td:first-child{font-family:"Ma Shan Zheng",serif;font-size:20px;color:var(--cinnabar)}
+.wufu .lv{display:inline-flex;gap:3px;align-items:center;justify-content:center}
+.wufu .lv i{width:9px;height:9px;background:var(--gold);transform:rotate(45deg);display:block;opacity:.28}
+.wufu .lv i.f{opacity:1;background:var(--cinnabar)}
+
+/* 五禮 */
+.wli{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:16px}
+.wlicard{border:1px solid rgba(168,130,63,.4);background:rgba(255,253,247,.7);border-radius:3px;padding:18px 12px;
+  text-align:center;transition:.35s;cursor:pointer}
+.wlicard:hover{transform:translateY(-5px);border-color:var(--cinnabar);background:rgba(156,43,33,.06)}
+.wlicard .sealch{width:54px;height:54px;margin:0 auto 10px;background:var(--cinnabar);color:#f9f0de;border-radius:4px;
+  display:grid;place-items:center;font-family:"Ma Shan Zheng",serif;font-size:30px;box-shadow:inset 0 0 0 2px rgba(255,240,220,.3)}
+.wlicard b{letter-spacing:.14em;font-size:15px}
+.wlicard span{display:block;color:var(--ink3);font-size:13px;margin-top:4px;letter-spacing:.04em}
+
+/* 課文閱讀器 */
+.reader{display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:start}
+.rail{position:sticky;top:96px;display:flex;flex-direction:column;gap:8px}
+.rail button{background:rgba(255,253,247,.6);border:1px solid rgba(168,130,63,.35);border-left:4px solid transparent;
+  padding:12px 14px;text-align:left;border-radius:2px;transition:.28s;color:var(--ink2)}
+.rail button:hover{background:rgba(168,130,63,.12)}
+.rail button.on{border-left-color:var(--cinnabar);background:rgba(156,43,33,.08);color:var(--ink)}
+.rail button em{font-style:normal;display:block;font-family:"Ma Shan Zheng",serif;color:var(--cinnabar);font-size:15px;letter-spacing:.2em}
+.rail button span{font-size:13.5px;letter-spacing:.05em}
+.pane2{background:linear-gradient(180deg,rgba(255,253,247,.9),rgba(244,236,217,.78));border:1px solid rgba(168,130,63,.42);
+  border-radius:3px;padding:26px;box-shadow:var(--shadow)}
+.rtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px;padding-bottom:14px;
+  border-bottom:1px dashed rgba(168,130,63,.5)}
+.chip{background:transparent;border:1px solid rgba(168,130,63,.5);color:var(--ink2);padding:6px 14px;font-size:13px;
+  letter-spacing:.14em;border-radius:2px;transition:.25s}
+.chip:hover{background:rgba(168,130,63,.14)}
+.chip.on{background:var(--cinnabar);border-color:var(--cinnabar);color:#f8efdc}
+.ptitle{font-family:"Ma Shan Zheng",serif;font-size:26px;color:var(--ink);letter-spacing:.12em;margin-bottom:4px}
+.psub{color:var(--cinnabar);font-size:14.5px;letter-spacing:.14em;margin-bottom:16px}
+.psrc{font-size:20px;line-height:2.35;letter-spacing:.1em;color:#2c2419;padding:6px 0}
+.psrc.big{font-size:23px}
+.psrc.small{font-size:17.5px}
+.psrc.vert{writing-mode:vertical-rl;text-orientation:upright;height:min(430px,62vh);overflow:auto;
+  font-size:19px;letter-spacing:.16em;margin:0 auto;width:100%;padding:10px}
+.anno{border-bottom:2px dotted var(--cinnabar);cursor:pointer;color:#7d231c;transition:.2s;padding-bottom:1px}
+.anno:hover,.anno.act{background:rgba(156,43,33,.16);border-bottom-style:solid}
+ruby rt{font-size:.5em;color:var(--cinnabar);letter-spacing:0}
+.pcols{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;margin-top:22px}
+.pbox{border:1px solid rgba(168,130,63,.35);background:rgba(255,255,255,.42);border-radius:3px;padding:18px}
+.pbox h5{font-size:14px;letter-spacing:.26em;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.pbox h5::before{content:"";width:14px;height:2px;background:var(--gold)}
+.notelist{list-style:none;font-size:14.8px;color:var(--ink2)}
+.notelist li{padding:7px 10px;border-left:2px solid transparent;transition:.3s;border-radius:2px}
+.notelist li b{color:var(--cinnabar);font-weight:700;margin-right:6px}
+.notelist li.hl{background:rgba(156,43,33,.1);border-left-color:var(--cinnabar)}
+.ptrans{font-size:15.6px;color:var(--ink2);line-height:2.05}
+.pkey{margin-top:16px;background:rgba(61,107,91,.1);border-left:3px solid var(--jade);padding:12px 16px;
+  font-size:14.6px;color:#2f5346;letter-spacing:.06em;border-radius:2px}
+
+/* 人生百年 */
+.life{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.life button{border:1px solid rgba(168,130,63,.45);background:rgba(255,253,247,.7);color:var(--ink2);padding:10px 14px;
+  border-radius:2px;font-size:14px;letter-spacing:.1em;transition:.28s;display:flex;align-items:center;gap:8px}
+.life button b{font-family:"Ma Shan Zheng",serif;font-size:20px;color:var(--cinnabar);line-height:1}
+.life button:hover{background:rgba(168,130,63,.14);transform:translateY(-2px)}
+.life button.on{background:var(--ink);border-color:var(--ink);color:#f2e7cd}
+.life button.on b{color:var(--gold2)}
+.lifebox{margin-top:18px;border:1px dashed rgba(168,130,63,.55);background:rgba(168,130,63,.07);padding:22px;border-radius:3px;
+  display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+.lifebox .big{font-family:"Ma Shan Zheng",serif;font-size:74px;color:var(--cinnabar);line-height:1;text-align:center}
+.lifebox .big em{display:block;font-style:normal;font-size:13px;letter-spacing:.24em;color:var(--ink3);margin-top:8px}
+
+/* 測驗 */
+.quiz .q{border:1px solid rgba(168,130,63,.35);background:rgba(255,253,247,.66);border-radius:3px;padding:20px 22px;margin-bottom:16px}
+.quiz .q h5{font-size:16.5px;color:var(--ink);margin-bottom:12px;letter-spacing:.06em;line-height:1.8}
+.quiz .q h5 i{font-style:normal;color:var(--cinnabar);font-family:"Ma Shan Zheng",serif;margin-right:8px;font-size:18px}
+.opt{display:block;width:100%;text-align:left;background:transparent;border:1px solid rgba(168,130,63,.3);
+  padding:10px 14px;margin:7px 0;border-radius:2px;font-size:15px;color:var(--ink2);transition:.25s;letter-spacing:.05em}
+.opt:hover{background:rgba(168,130,63,.12);border-color:var(--gold)}
+.opt.sel{background:rgba(43,58,86,.12);border-color:var(--indigo);color:var(--indigo)}
+.opt.right{background:rgba(61,107,91,.16);border-color:var(--jade);color:#2b4f42}
+.opt.wrong{background:rgba(156,43,33,.14);border-color:var(--cinnabar);color:#7d231c}
+.exp{display:none;margin-top:10px;padding:12px 14px;border-left:3px solid var(--gold);background:rgba(168,130,63,.1);
+  font-size:14.5px;color:var(--ink2);border-radius:2px}
+.exp.show{display:block;animation:fade .4s}
+.scoreboard{display:none;text-align:center;border:1px solid var(--gold);background:rgba(156,43,33,.07);padding:26px;border-radius:3px;margin-bottom:22px}
+.scoreboard.show{display:block;animation:fade .5s}
+.scoreboard .n{font-family:"Ma Shan Zheng",serif;font-size:60px;color:var(--cinnabar);line-height:1}
+.scoreboard p{letter-spacing:.2em;color:var(--ink2);margin-top:8px}
+
+/* 思考題 */
+.think textarea{width:100%;min-height:130px;border:1px solid rgba(168,130,63,.45);background:rgba(255,253,247,.85);
+  padding:14px;font-family:inherit;font-size:15.5px;color:var(--ink);border-radius:2px;resize:vertical;line-height:1.9}
+.think textarea:focus{outline:none;border-color:var(--cinnabar);box-shadow:0 0 0 3px rgba(156,43,33,.12)}
+
+/* 應用矩陣 */
+.matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:14px}
+.mcell{border:1px solid rgba(168,130,63,.35);background:rgba(255,253,247,.6);border-radius:3px;padding:18px;transition:.3s}
+.mcell:hover{border-color:var(--cinnabar);background:rgba(156,43,33,.05)}
+.mcell b{display:block;color:var(--cinnabar);letter-spacing:.2em;font-size:16px;margin-bottom:8px}
+.mcell .tags{display:flex;flex-wrap:wrap;gap:7px}
+.mcell .tags span{font-size:13px;border:1px solid rgba(168,130,63,.5);color:var(--ink2);padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.4)}
+
+/* 頁尾 */
+footer{margin-top:60px;background:var(--ink);color:#cdbfa2;padding:50px 22px 34px;border-top:3px solid var(--gold);position:relative}
+.fin{max-width:1140px;margin:0 auto;display:flex;gap:26px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+footer .ft{font-family:"Ma Shan Zheng",serif;font-size:26px;color:#efe2c6;letter-spacing:.2em}
+footer p{font-size:13.6px;letter-spacing:.12em;color:#a4957a;margin-top:6px;max-width:640px}
+#top{position:fixed;right:22px;bottom:24px;z-index:800;width:52px;height:52px;border-radius:50%;border:1px solid var(--gold);
+  background:rgba(34,29,23,.92);color:#efe2c6;font-size:13px;letter-spacing:.06em;display:grid;place-items:center;
+  opacity:0;pointer-events:none;transition:.35s;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+#top.show{opacity:1;pointer-events:auto}
+#top:hover{background:var(--cinnabar);transform:translateY(-3px)}
+
+/* 響應式 */
+@media (max-width:1024px){
+  .reader{grid-template-columns:1fr}
+  .rail{position:static;flex-direction:row;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+  .rail::-webkit-scrollbar{display:none}
+  .rail button{min-width:150px}
+  .origrid{grid-template-columns:1fr}
+  .pcols{grid-template-columns:1fr}
+  .fngrid{grid-template-columns:repeat(2,1fr)}
+  .wli{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:820px){
+  #menuBtn{display:block}
+  nav{position:absolute;top:100%;left:0;right:0;background:rgba(34,29,23,.98);border-bottom:2px solid var(--gold);
+    max-height:0;overflow:hidden;transition:max-height .4s ease}
+  nav.open{max-height:70vh;overflow-y:auto}
+  nav ul{flex-direction:column;min-width:0}
+  nav a{padding:13px 22px;border-bottom:1px solid rgba(168,130,63,.2)}
+  nav a::after{display:none}
+  nav a.on{background:rgba(156,43,33,.25)}
+  .grid2,.grid3,.grid4,.sanli,.six,.matrix{grid-template-columns:1fr}
+  .six{grid-template-columns:repeat(2,1fr)}
+  .wli{grid-template-columns:repeat(2,1fr)}
+  .juanhead{align-items:center}
+  .juanhead .num{writing-mode:horizontal-tb;padding:8px 12px}
+  .lifebox{grid-template-columns:1fr;text-align:center}
+  .juan{padding:56px 16px}
+  .card{padding:22px 18px}
+  .tablewrap{overflow-x:auto}
+}
+@media (max-width:520px){
+  .six{grid-template-columns:1fr}
+  .fngrid{grid-template-columns:1fr}
+  .wli{grid-template-columns:repeat(2,1fr)}
+  .hero .three span{font-size:12.5px;padding:6px 12px}
+}
+</style>
+</head>
+<body>
+
+<!-- 開卷 -->
+<div id="curtain"><div class="half l"></div><div class="half r"></div></div>
+<div id="bar"></div>
+
+<!-- 導覽 -->
+<header>
+  <div class="navwrap">
+    <button id="menuBtn" aria-label="選單">☰ 卷目</button>
+    <a class="brand" href="#shou"><span class="sealmini">禮</span><b>《禮記》選 · 曲禮</b></a>
+    <nav id="nav">
+      <ul>
+        <li><a href="#shou" class="on">卷首</a></li>
+        <li><a href="#s1">壹 · 釋禮</a></li>
+        <li><a href="#s2">貳 · 字源</a></li>
+        <li><a href="#s3">參 · 禮之初</a></li>
+        <li><a href="#s4">肆 · 源流</a></li>
+        <li><a href="#s5">伍 · 今禮</a></li>
+        <li><a href="#s6">陸 · 曲禮</a></li>
+        <li><a href="#s7">柒 · 義理</a></li>
+        <li><a href="#s8">捌 · 小試身手</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= 卷首 ================= -->
+<section class="hero" id="shou">
+  <svg class="cloudL" viewBox="0 0 200 120" fill="none" stroke="#a8823f" stroke-width="1.6">
+    <path d="M10 80c0-16 14-26 28-22 2-18 20-28 34-18 8-14 30-14 36 2 16-4 28 8 26 22 12 2 18 12 14 20H10z"/>
+    <path d="M30 96c14-6 28-6 42 0M90 96c14-6 28-6 42 0"/>
+    <path d="M44 62c6-8 16-8 22 0M96 58c6-8 16-8 22 0"/>
+  </svg>
+  <svg class="cloudR" viewBox="0 0 200 120" fill="none" stroke="#9c2b21" stroke-width="1.6">
+    <path d="M10 80c0-16 14-26 28-22 2-18 20-28 34-18 8-14 30-14 36 2 16-4 28 8 26 22 12 2 18 12 14 20H10z"/>
+    <path d="M30 96c14-6 28-6 42 0M90 96c14-6 28-6 42 0"/>
+    <path d="M44 62c6-8 16-8 22 0M96 58c6-8 16-8 22 0"/>
+  </svg>
+
+  <div class="heroin">
+    <div class="seal">禮記<br>選讀</div>
+    <h1>《禮記》<span>選</span></h1>
+    <p class="sub">禮 —— 中國傳統文化的特徵</p>
+    <div class="three">
+      <span>國家的典章制度</span>
+      <span>社會的生活習慣</span>
+      <span>個人的行為規範</span>
+    </div>
+    <p class="meta">本課課文皆選自《禮記》中的〈曲禮〉 · 注重我們在生活上的表現</p>
+    <div class="herobtns">
+      <a class="btn" href="#s1">▶ 開卷研讀</a>
+      <a class="btn ghost" href="#s6">◆ 直入〈曲禮〉</a>
+      <a class="btn ghost" href="#s8">✎ 小試身手</a>
+    </div>
+    <div class="scrollhint">▼ 徐徐展卷 ▼</div>
+  </div>
+</section>
+
+<!-- ================= 壹 · 釋禮 ================= -->
+<section class="juan reveal" id="s1">
+  <div class="juanhead">
+    <span class="num">卷壹</span>
+    <div>
+      <h2>釋禮</h2>
+      <p>「禮」字的定義 · 禮的功用</p>
+    </div>
+  </div>
+  <svg class="orn" viewBox="0 0 400 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="158" y2="12"/><line x1="242" y1="12" x2="400" y2="12"/>
+    <path d="M200 3 L209 12 L200 21 L191 12 Z"/><circle cx="170" cy="12" r="2.6"/><circle cx="230" cy="12" r="2.6"/>
+  </svg>
+
+  <p class="lead">禮，是中國傳統文化的特徵：於國為典章制度，於社會為生活習慣，於個人為行為規範。欲讀〈曲禮〉，先識「禮」字之義。</p>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3><span class="idx">義</span>「禮」字的定義</h3>
+    <p style="color:var(--ink3);font-size:14.5px;letter-spacing:.1em">點擊各條，展開例證與說明。</p>
+    <div class="tabs" data-tabs="def" style="margin-top:14px">
+      <button class="tab on" data-pane="def-noun">作名詞用（五義）</button>
+      <button class="tab" data-pane="def-verb">作動詞用（二義）</button>
+    </div>
+
+    <div class="pane on" id="def-noun">
+      <div class="deflist">
+        <div class="defitem">
+          <button><span class="dot"></span>人類的行為規範<span class="ex">＋</span></button>
+          <div class="body"><div>禮最基本的定義：人所當遵循的行為準則，是維繫群體生活的規範體系。</div></div>
+        </div>
+        <div class="defitem">
+          <button><span class="dot"></span>表示尊敬的態度和動作<span class="ex">行禮 · 有禮</span></button>
+          <div class="body"><div>如：「行禮」、「有禮」。指內懷敬意、外現儀節的舉止態度。</div></div>
+        </div>
+        <div class="defitem">
+          <button><span class="dot"></span>社會生活中由於道德觀念和風俗習慣而形成的儀式<span class="ex">典禮 · 婚禮</span></button>
+          <div class="body"><div>如：「典禮」、「婚禮」、「喪禮」、「成年禮」。由道德觀念與風俗習慣累積而成的公開儀節。</div></div>
+        </div>
+        <div class="defitem">
+          <button><span class="dot"></span>表示慶賀、友好或敬意所贈之物<span class="ex">禮物 · 禮金</span></button>
+          <div class="body"><div>如：「禮物」、「禮金」。以物致意，是敬意在人際往來中的具體呈現。</div></div>
+        </div>
+        <div class="defitem">
+          <button><span class="dot"></span>儒家的經典<span class="ex">《禮記》</span></button>
+          <div class="body"><div>如：《禮記》。與《周禮》、《儀禮》合稱「三禮」，為儒家十三經之一。</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pane" id="def-verb">
+      <div class="deflist">
+        <div class="defitem">
+          <button><span class="dot"></span>祭<span class="ex">祭神祈福</span></button>
+          <div class="body"><div>本義為祭：履行敬神祈福的儀式。此為「禮」字最原始的動詞用法，與字源「豊」相合。</div></div>
+        </div>
+        <div class="defitem">
+          <button><span class="dot"></span>尊敬、厚待<span class="ex">禮賢下士</span></button>
+          <div class="body"><div>如：「禮賢下士」。以敬相待、以厚相養，引申為上位者敬重賢才。</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="idx">用</span>禮的功用</h3>
+    <div class="fngrid" style="margin-top:18px">
+      <div class="fn"><div class="ch">政</div><b>政治</b><span>禮因政治作用而建立</span></div>
+      <div class="fn"><div class="ch">文</div><b>文化</b><span>促進人類文化的發展</span></div>
+      <div class="fn"><div class="ch">教</div><b>教育與倫理</b><span>防人惡而導人善</span></div>
+      <div class="fn"><div class="ch">群</div><b>社會</b><span>融合社會習慣，保持社會秩序</span></div>
+    </div>
+    <div class="rule2"></div>
+    <p style="font-size:15px;color:var(--ink2)">四者相為表裡：以政治立其制，以文化廣其用，以教育倫理正其心，以社會秩序安其群。</p>
+  </div>
+</section>
+
+<!-- ================= 貳 · 字源 ================= -->
+<section class="juan reveal" id="s2">
+  <div class="juanhead">
+    <span class="num">卷貳</span>
+    <div>
+      <h2>字源</h2>
+      <p>「禮」字的起源：從「豊」到「禮」</p>
+    </div>
+  </div>
+  <svg class="orn" viewBox="0 0 400 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="158" y2="12"/><line x1="242" y1="12" x2="400" y2="12"/>
+    <path d="M200 3 L209 12 L200 21 L191 12 Z"/><circle cx="170" cy="12" r="2.6"/><circle cx="230" cy="12" r="2.6"/>
+  </svg>
+
+  <div class="origrid">
+    <div class="zi">
+      <div class="zibox">
+        <svg viewBox="0 0 200 250" width="100%" height="210" aria-label="青銅豆">
+          <defs>
+            <linearGradient id="bz" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7d8f6a"/><stop offset="42%" stop-color="#4e6151"/>
+              <stop offset="70%" stop-color="#8ba37a"/><stop offset="100%" stop-color="#3a4a3d"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="100" cy="26" rx="11" ry="8" fill="url(#bz)" stroke="#2f3b30"/>
+          <path d="M42 62 Q100 38 158 62 L138 122 Q100 138 62 122 Z" fill="url(#bz)" stroke="#2f3b30" stroke-width="1.4"/>
+          <path d="M56 78 Q100 62 144 78 M58 94 Q100 80 142 94 M60 108 Q100 96 140 108" fill="none" stroke="#dfe8d2" stroke-opacity=".45" stroke-width="1.2"/>
+          <path d="M86 124 L84 190 H116 L114 124 Z" fill="url(#bz)" stroke="#2f3b30" stroke-width="1.2"/>
+          <path d="M88 140 H112 M88 156 H112 M88 172 H112" stroke="#dfe8d2" stroke-opacity=".4" stroke-width="1.2"/>
+          <path d="M60 190 H140 L152 214 Q100 232 48 214 Z" fill="url(#bz)" stroke="#2f3b30" stroke-width="1.4"/>
+          <ellipse cx="100" cy="232" rx="52" ry="7" fill="#000" opacity=".12"/>
+        </svg>
+        <div class="cap">托盤狀的「豆」· 食器亦祭器</div>
+      </div>
+      <div class="flowarrow">▼</div>
+      <div class="zibox">
+        <svg viewBox="0 0 220 130" width="100%" height="120" aria-label="玉串與建鼓">
+          <g stroke="#3d6b5b" stroke-width="1.6" fill="none">
+            <path d="M36 14 V96"/><path d="M64 14 V96"/>
+            <circle cx="36" cy="30" r="7" fill="#cfe0d5"/><circle cx="36" cy="52" r="7" fill="#cfe0d5"/>
+            <circle cx="36" cy="74" r="7" fill="#cfe0d5"/>
+            <circle cx="64" cy="30" r="7" fill="#cfe0d5"/><circle cx="64" cy="52" r="7" fill="#cfe0d5"/>
+            <circle cx="64" cy="74" r="7" fill="#cfe0d5"/>
+          </g>
+          <g>
+            <path d="M110 112 H212" stroke="#6b4a24" stroke-width="4"/>
+            <path d="M124 112 V46 M198 112 V46" stroke="#6b4a24" stroke-width="4"/>
+            <ellipse cx="161" cy="70" rx="36" ry="30" fill="#a8352a" stroke="#6b2018" stroke-width="2"/>
+            <ellipse cx="161" cy="70" rx="20" ry="16" fill="#e8d7b4" stroke="#8a6b3a" stroke-width="1.4"/>
+            <path d="M141 70h40M161 54v32" stroke="#a8823f" stroke-width="1.2"/>
+          </g>
+          <text x="10" y="126" font-size="11" fill="#7a6c5b" letter-spacing="2">兩串美玉 · 有支架的建鼓</text>
+        </svg>
+        <div class="cap">甲骨文「豊」之形：擊鼓奏樂，以玉奉神</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <h3><span class="idx">一</span>本字為「豊」</h3>
+        <p>禮的本字為「<b style="color:var(--cinnabar)">豊</b>」，一看就知道與祭祀有關。在甲骨文中，「豊」的<b>頂部就像兩串美玉</b>，<b>底部就像有支架的建鼓</b>。合起來就是「擊鼓奏樂」，用美玉敬奉祖先和神靈。</p>
+        <div class="quote">上升到定義，就是履行敬神祈福的儀式。</div>
+      </div>
+      <div class="card" style="margin-bottom:18px">
+        <h3><span class="idx">二</span>食器與祭器的符號意義</h3>
+        <p>這托盤狀的「<b style="color:var(--cinnabar)">豆</b>」，後來也被視作食器或祭器。</p>
+        <p style="margin-top:8px">在人類文明早期，食器和祭器可不是單純放置食物與祭品的器皿，而是很重要的符號：</p>
+        <ul style="margin-top:6px">
+          <li><b>食器</b>——象徵基本的物質寄託。</li>
+          <li><b>祭器</b>——象徵誠敬的精神寄託。</li>
+        </ul>
+        <p style="margin-top:8px">融匯起來，恰巧與「<b style="color:var(--cinnabar)">民以食為天</b>」的理念相吻合。<span class="tag">器物參考：國立故宮博物院藏器</span></p>
+      </div>
+      <div class="card">
+        <h3><span class="idx">三</span>加「示」而成「禮」</h3>
+        <p>因為「<b>豊</b>」常被混淆為「<b>豐</b>」，所以在偏旁加上一個「<b style="color:var(--cinnabar)">示</b>」字表示祭桌，變成現今的「<b style="color:var(--cinnabar)">禮</b>」字。</p>
+        <div style="display:flex;align-items:center;justify-content:center;gap:20px;margin-top:20px;flex-wrap:wrap">
+          <div style="text-align:center"><div style="font-family:'Ma Shan Zheng',serif;font-size:56px;line-height:1">豊</div><div class="tag">本字 · 象形</div></div>
+          <div style="font-size:28px;color:var(--gold)">＋</div>
+          <div style="text-align:center"><div style="font-family:'Ma Shan Zheng',serif;font-size:56px;line-height:1">示</div><div class="tag">祭桌 · 部首</div></div>
+          <div style="font-size:28px;color:var(--gold)">＝</div>
+          <div style="text-align:center"><div style="font-family:'Ma Shan Zheng',serif;font-size:66px;line-height:1;color:var(--cinnabar)">禮</div><div class="tag red">今字</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 參 · 禮之初 ================= -->
+<section class="juan reveal" id="s3">
+  <div class="juanhead">
+    <span class="num">卷參</span>
+    <div>
+      <h2>禮之初</h2>
+      <p>最初的「禮」——先於文字而存在</p>
+    </div>
+  </div>
+  <svg class="orn" viewBox="0 0 400 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="158" y2="12"/><line x1="242" y1="12" x2="400" y2="12"/>
+    <path d="M200 3 L209 12 L200 21 L191 12 Z"/><circle cx="170" cy="12" r="2.6"/><circle cx="230" cy="12" r="2.6"/>
+  </svg>
+
+  <div class="grid2">
+    <div class="card">
+      <h3><span class="idx">源</span>禮先於文字</h3>
+      <ul>
+        <li>早在文字產生之前，禮就已在人們的生活中逐漸形成。</li>
+        <li>人們在<b>出生、成人、婚娶、生育、疾病、老死、安葬</b>時，常舉行特別的儀式。</li>
+        <li>儀式中的人們會配戴不同的飾物、穿著不同的衣服、使用不同的器皿，或歌或舞、或喜或悲。</li>
+        <li>有一定的<b>規矩</b>、一定的<b>程序</b>。</li>
+      </ul>
+      <div class="quote">《禮記》是由生活漸漸約定俗成，不可能由一人強制規定。</div>
+    </div>
+    <div class="card">
+      <h3><span class="idx">儀</span>儀式中的四個要素</h3>
+      <div class="grid2" style="gap:14px;margin-top:10px">
+        <div style="border:1px solid rgba(168,130,63,.4);padding:16px;border-radius:3px;background:rgba(255,255,255,.35)">
+          <b style="color:var(--cinnabar);letter-spacing:.2em">飾物</b>
+          <p style="font-size:14px;margin-top:6px">配戴不同的飾物，以別身分與場合。</p>
+        </div>
+        <div style="border:1px solid rgba(168,130,63,.4);padding:16px;border-radius:3px;background:rgba(255,255,255,.35)">
+          <b style="color:var(--cinnabar);letter-spacing:.2em">衣服</b>
+          <p style="font-size:14px;margin-top:6px">穿著不同的衣服，吉凶各有所服。</p>
+        </div>
+        <div style="border:1px solid rgba(168,130,63,.4);padding:16px;border-radius:3px;background:rgba(255,255,255,.35)">
+          <b style="color:var(--cinnabar);letter-spacing:.2em">器皿</b>
+          <p style="font-size:14px;margin-top:6px">使用不同的器皿，食器祭器各有其義。</p>
+        </div>
+        <div style="border:1px solid rgba(168,130,63,.4);padding:16px;border-radius:3px;background:rgba(255,255,255,.35)">
+          <b style="color:var(--cinnabar);letter-spacing:.2em">歌舞</b>
+          <p style="font-size:14px;margin-top:6px">或歌或舞、或喜或悲，情見乎儀。</p>
+        </div>
+      </div>
+      <p style="margin-top:16px;font-size:14.5px;color:var(--ink3)">人生大事皆有儀節：出生 → 成人 → 婚娶 → 生育 → 疾病 → 老死 → 安葬。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 肆 · 源流 ================= -->
+<section class="juan reveal" id="s4">
+  <div class="juanhead">
+    <span class="num">卷肆</span>
+    <div>
+      <h2>源流</h2>
+      <p>《禮記》的背景 · 三禮 · 成書過程</p>
+    </div>
+  </div>
+  <svg class="orn" viewBox="0 0 400 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="158" y2="12"/><line x1="242" y1="12" x2="400" y2="12"/>
+    <path d="M200 3 L209 12 L200 21 L191 12 Z"/><circle cx="170" cy="12" r="2.6"/><circle cx="230" cy="12" r="2.6"/>
+  </svg>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3><span class="idx">史</span>《禮記》的背景：禮樂崩壞 → 重新制定</h3>
+    <div class="tl">
+      <div class="tli">
+        <span class="pt"></span>
+        <h4><span class="era">西周</span>周公「制禮作樂」</h4>
+        <p>將禮提升到<b>治國綱領</b>和<b>社會生活的總規範</b>。</p>
+      </div>
+      <div class="tli">
+        <span class="pt"></span>
+        <h4><span class="era">春秋</span>禮樂制度自行其是</h4>
+        <p>周天子權力衰退，諸侯坐大後，禮樂制度自行其是。</p>
+      </div>
+      <div class="tli">
+        <span class="pt"></span>
+        <h4><span class="era">魯定公之後</span>進入「禮樂崩壞期」</h4>
+        <p>孔子與其弟子堅持研習各種典禮，希望可以使國家、社會重新有秩序的發展。</p>
+      </div>
+      <div class="tli">
+        <span class="pt"></span>
+        <h4><span class="era">戰國</span>荀況為「禮」之集大成</h4>
+        <p>《荀子》中首見〈禮論〉專篇論禮。</p>
+      </div>
+      <div class="tli" style="padding-bottom:0">
+        <span class="pt"></span>
+        <h4><span class="era">漢</span>叔孫通制訂宮廷禮儀</h4>
+        <p>漢成立後，叔孫通協助漢高祖制訂漢朝的宮廷禮儀。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3><span class="idx">三</span>「三禮」對照</h3>
+    <div class="sanli" style="margin-top:18px">
+      <div class="card" style="box-shadow:none">
+        <div class="bk">《周禮》</div>
+        <div class="role">政治制度</div>
+        <p style="font-size:14.8px">敘述周代的<b>行政官制</b>和<b>職掌</b>。</p>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <div class="bk">《儀禮》</div>
+        <div class="role">禮俗</div>
+        <p style="font-size:14.8px">記述古代<b>習俗禮儀</b>，如冠、昏、喪、祭、鄉、射、朝、聘諸儀。</p>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <div class="bk">《禮記》</div>
+        <div class="role">禮的理論</div>
+        <p style="font-size:14.8px">是<b>戰國、秦漢間儒家論禮文章之集成</b>，是闡釋「禮」的論著；漢代學者講授《儀禮》時，會選擇其中篇章作為補充資料。</p>
+      </div>
+    </div>
+    <div class="rule2"></div>
+    <h4>《禮記》的四項內容</h4>
+    <div class="grid2" style="gap:14px">
+      <div class="mcell"><b>一 · 說明禮文制度的原意</b><p style="font-size:14.5px;color:var(--ink2)">追溯禮文制度之所以然的本義。</p></div>
+      <div class="mcell"><b>二 · 闡論淑世拯民的道理</b><p style="font-size:14.5px;color:var(--ink2)">內容較駁雜，兼收諸家論說。</p></div>
+      <div class="mcell"><b>三 · 記載祭祀養老的制度</b><p style="font-size:14.5px;color:var(--ink2)">祭祀以敬鬼神，養老以尊長齒。</p></div>
+      <div class="mcell"><b>四 · 敘述生活行為的規範</b><p style="font-size:14.5px;color:var(--ink2)">如〈曲禮〉，詳於日常舉止之法。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="idx">書</span>《禮記》成書過程</h3>
+    <div class="bookflow">
+      <div class="bnode"><b>孔子與其弟子、後學</b><span>研習典禮，論禮之文相繼而成</span></div>
+      <div class="barrow">→</div>
+      <div class="bnode"><b>秦、漢間儒者</b><span>論禮文章集成，凡 <b style="display:inline;color:var(--indigo)">131</b> 篇</span></div>
+      <div class="barrow">→</div>
+      <div class="bnode"><b>漢宣帝時期 · 戴德</b><span>選 85 篇 →《大戴禮記》（亡）</span></div>
+      <div class="barrow">→</div>
+      <div class="bnode"><b>漢宣帝時期 · 戴聖</b><span>選 49 篇 →《小戴禮記》</span></div>
+      <div class="barrow">→</div>
+      <div class="bnode"><b>東漢 · 鄭玄作注</b><span>唐 · 孔穎達作正義</span></div>
+      <div class="barrow">→</div>
+      <div class="bnode" style="border-color:var(--cinnabar);background:rgba(156,43,33,.08)"><b style="color:var(--cinnabar)">收於《十三經》</b><span>即今本《禮記》，保存至今</span></div>
+    </div>
+    <p style="margin-top:16px;font-size:14.5px;color:var(--ink3)">※ 今通行之《禮記》即《小戴禮記》，四十九篇，〈曲禮〉為其首篇（分上、下）。</p>
+  </div>
+</section>
+
+<!-- ================= 伍 · 今禮 ================= -->
+<section class="juan reveal" id="s5">
+  <div class="juanhead">
+    <span class="num">卷伍</span>
+    <div>
+      <h2>今禮</h2>
+      <p>現在常見的「禮」——婚禮與喪禮</p>
+    </div>
+  </div>
+  <svg class="orn" viewBox="0 0 400 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="158" y2="12"/><line x1="242" y1="12" x2="400" y2="12"/>
+    <path d="M200 3 L209 12 L200 21 L191 12 Z"/><circle cx="170" cy="12" r="2.6"/><circle cx="230" cy="12" r="2.6"/>
+  </svg>
+
+  <div class="tabs" data-tabs="jin">
+    <button class="tab on" data-pane="jin-hun">（一）婚禮 · 三書六禮</button>
+    <button class="tab" data-pane="jin-sang">（二）喪禮 · 儀制流程</button>
+  </div>
+
+  <!-- 婚禮 -->
+  <div class="pane on" id="jin-hun">
+    <div class="card">
+      <h3><span class="idx">昏</span>婚禮（昏禮）</h3>
+      <p>中國古代稱婚禮為<b style="color:var(--cinnabar)">昏禮</b>，因多在<b>黃昏</b>舉行。《禮記》對婚禮所做的規範化的表述：</p>
+      <div class="quote">「昏禮者，將合二姓之好，上以事宗廟，而下以繼後世也，故君子重之。」</div>
+      <p style="font-size:14.6px;color:var(--ink3)">譯意：婚禮是結合兩姓的友好，上以奉事宗廟，下以傳續後世，所以君子重視它。</p>
+
+      <div class="rule2"></div>
+      <h4>《儀禮》將整套儀式合稱為「三書六禮」</h4>
+      <p style="font-size:15px">「三書」指在「六禮」過程中所用的文書，包括<b style="color:var(--cinnabar)">聘書、禮書、迎書</b>。</p>
+      <div class="grid3" style="gap:14px;margin-top:12px">
+        <div class="mcell"><b>聘書</b><p style="font-size:14px;color:var(--ink2)">訂親之書，於「納吉」時致送女家。<span class="tag" style="margin-left:6px">補充</span></p></div>
+        <div class="mcell"><b>禮書</b><p style="font-size:14px;color:var(--ink2)">過禮之書，於「納徵」時用，列明禮品數目。<span class="tag" style="margin-left:6px">補充</span></p></div>
+        <div class="mcell"><b>迎書</b><p style="font-size:14px;color:var(--ink2)">迎娶之書，於「親迎」接新娘時用。<span class="tag" style="margin-left:6px">補充</span></p></div>
+      </div>
+
+      <div class="rule2"></div>
+      <h4>「六禮」——點擊卡片翻轉查看釋義</h4>
+      <div class="six" id="sixli"></div>
+      <p style="margin-top:14px;font-size:13.6px;color:var(--ink3)">※ 六禮釋義為補充說明，便於理解程序之意。</p>
+    </div>
+  </div>
+
+  <!-- 喪禮 -->
+  <div class="pane" id="jin-sang">
+    <div class="card" style="margin-bottom:22px">
+      <h3><span class="idx">喪</span>喪禮儀制</h3>
+      <p>傳統治喪儀制主要過程得以保留，但如<b>喪儀、喪服制、孝服制</b>等傳統已被「<b style="color:var(--cinnabar)">簡化</b>」，完整依儒家舊制者已鮮有見聞。</p>
+      <h4>喪禮流程（點擊步驟查看說明）</h4>
+      <div class="steps" id="steps"></div>
+      <div class="stepbox" id="stepbox"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="idx">七</span>燒七 · 做七</h3>
+        <p>親友每七天去靈堂看望並燒紙錢，一共去七次，共<b style="color:var(--cinnabar)">四十九天</b>。還有類似的招魂、超渡、燒紙錢等活動，稱為「<b>做七</b>」。</p>
+        <p style="margin-top:8px">第四十九天的儀式稱為「<b style="color:var(--cinnabar)">斷七</b>」，為正式葬禮部分的結束。</p>
+      </div>
+      <div class="card">
+        <h3><span class="idx">孝</span>守孝</h3>
+        <p>按儒家的傳統實際服孝 <b>3 期</b>，每期 <b>9 個月</b>，共 <b style="color:var(--cinnabar)">27 個月</b>，孝子應該守護在父母墓的周圍。</p>
+        <p style="margin-top:8px">服孝期間（實際上一般在百日內），不剃頭、刮臉、剪指甲、飲酒、夫妻同房、外出等；逢春節或親友舉辦慶典，亦不拜禮和慶賀。家中女眷也要素妝。</p>
+        <p style="margin-top:8px;color:var(--jade)"><b>現代社會</b>：若家中有喪事，第一年春節不去各家拜年。</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <h3><span class="idx">服</span>喪服與「五服」制度</h3>
+      <p>喪服：為哀悼死者而穿的服裝。中國古代喪服自<b>周代</b>已用<b>素服</b>（素衣、素裳、素冠等），均取<b style="color:var(--ink)">白色</b>，並有五服制度，即按<b>服喪重輕、做工粗細、周期長短</b>，分為五等：<b style="color:var(--cinnabar)">斬衰、齊衰、大功、小功、緦麻</b>。</p>
+      <div class="tablewrap">
+        <table class="wufu" id="wufu">
+          <thead><tr><th style="width:16%">等第</th><th style="width:18%">喪服</th><th style="width:16%">服期</th><th style="width:22%">材質做工</th><th>適用（補充）</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p style="margin-top:12px;font-size:13.6px;color:var(--ink3)">※ 服期與適用親屬為補充說明；「齊衰」音ㄗ　ㄘㄨㄟ、「緦麻」音ㄙ　ㄇㄚˊ、「斬衰」音ㄓㄢˇ　ㄘㄨㄟ。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 陸 · 曲禮 ================= -->
+<section class="juan reveal" id="s6">
+  <div class="juanhead">
+    <span class="num">卷陸</span>
+    <div>
+      <h2>曲禮</h2>
+      <p>〈曲禮〉介紹 · 課文選讀六則 · 字詞表</p>
+    </div>
+  </div>
+  <svg class="orn" viewBox="0 0 400 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="158" y2="12"/><line x1="242" y1="12" x2="400" y2="12"/>
+    <path d="M200 3 L209 12 L200 21 L191 12 Z"/><circle cx="170" cy="12" r="2.6"/><circle cx="230" cy="12" r="2.6"/>
+  </svg>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3><span class="idx">仁</span>孔子曰：「克己復禮為仁」</h3>
+    <p>「仁」的表現就在<b>言語、飲食、灑掃、進退</b>之日常舉止中，就在<b>事親、敬長、問學、交友</b>的行為儀節上，此乃儒家生活教育的實踐。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3><span class="idx">名</span>何謂〈曲禮〉？</h3>
+    <div class="grid2" style="gap:16px;margin-top:14px">
+      <div class="mcell">
+        <b>一 · 篇名之義</b>
+        <p style="font-size:15px">《禮記》<b>首篇</b>篇名，分<b>上、下</b>兩篇。以其篇記<b>吉、凶、賓、軍、嘉</b>五禮之事，明其委屈，故稱為「曲禮」。</p>
+      </div>
+      <div class="mcell">
+        <b>二 · 內容之義</b>
+        <p style="font-size:15px">多記禮文之<b>細微曲折</b>之處，尤其詳細於<b>言語、飲食、灑掃、應對、進退</b>之法，在日常舉止之中。</p>
+      </div>
+    </div>
+    <h4 style="margin-top:22px">五禮（點擊查看）</h4>
+    <div class="wli" id="wuli"></div>
+    <p id="wuliInfo" style="margin-top:14px;font-size:15px;color:var(--ink2);border-left:3px solid var(--gold);padding-left:14px">「曲」者，委曲詳盡之意——於吉、凶、賓、軍、嘉五禮之事，一一明其曲折細微，故稱〈曲禮〉。</p>
+  </div>
+
+  <!-- 課文閱讀器 -->
+  <div class="card" style="margin-bottom:24px;padding:0;overflow:hidden">
+    <div style="padding:22px 26px 0">
+      <h3><span class="idx">讀</span>課文選讀 · 六則</h3>
+      <p style="color:var(--ink3);font-size:14.4px">左側選擇章節；點擊原文中<b style="color:var(--cinnabar)">虛線標示</b>之字詞，可對照下方注釋。</p>
+    </div>
+    <div style="padding:20px 26px 26px">
+      <div class="reader">
+        <div class="rail" id="rail"></div>
+        <div class="pane2" id="pbox"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 人生百年 -->
+  <div class="card" style="margin-bottom:24px">
+    <h3><span class="idx">年</span>人生百年 · 各階段的禮制要求</h3>
+    <p style="font-size:15px;color:var(--ink2)">〈曲禮〉以十年為一階段，自「幼」至「期頤」，各有其名、各有其責。點擊各稱謂查看釋義。</p>
+    <div class="life" id="life"></div>
+    <div class="lifebox" id="lifebox"></div>
+    <div class="quote" style="margin-top:18px">問題討論：未成年犯罪與老年人犯罪，是不是可以從輕或減輕處罰？</div>
+  </div>
+
+  <!-- 字詞表 -->
+  <div class="card">
+    <h3><span class="idx">字</span>字音字義表</h3>
+    <div class="tablewrap">
+      <table class="wufu" id="zitbl">
+        <thead><tr><th style="width:16%">字詞</th><th style="width:18%">注音</th><th>字義</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 柒 · 義理 ================= -->
+<section class="juan reveal" id="s7">
+  <div class="juanhead">
+    <span class="num">卷柒</span>
+    <div>
+      <h2>義理</h2>
+      <p>〈曲禮〉重點總結 · 禮的現代意義 · 生活應用</p>
+    </div>
+  </div>
+  <svg class="orn" viewBox="0 0 400 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="158" y2="12"/><line x1="242" y1="12" x2="400" y2="12"/>
+    <path d="M200 3 L209 12 L200 21 L191 12 Z"/><circle cx="170" cy="12" r="2.6"/><circle cx="230" cy="12" r="2.6"/>
+  </svg>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3><span class="idx">總</span>〈曲禮〉重點總結</h3>
+    <p style="font-size:15.6px">〈曲禮〉內容蘊含<b>親職教育、倫理教育、性別教育</b>等面向，內容包含從<b>個人修身、生活常規、待人接物、家庭倫理</b>，進而擴展至<b>生命的實踐</b>，正可提供現今家庭教育的參考。</p>
+    <div class="grid3" style="gap:14px;margin-top:16px">
+      <div class="mcell"><b>一 · 尊師敬長之禮</b><p style="font-size:14.4px;color:var(--ink2)">侍坐於先生、侍坐於君子：請業則起，請益則起；察其倦意而請出。</p></div>
+      <div class="mcell"><b>二 · 孝親之禮</b><p style="font-size:14.4px;color:var(--ink2)">出必告，反必面，所遊必有常，所習必有業。</p></div>
+      <div class="mcell"><b>三 · 拜訪與待客之禮</b><p style="font-size:14.4px;color:var(--ink2)">應對進退、言語飲食灑掃之法，皆在日常舉止之中。</p></div>
+    </div>
+    <div class="rule2"></div>
+    <div class="grid2" style="gap:14px">
+      <div class="mcell"><b>1 · 尊重和謙讓</b><p style="font-size:14.4px;color:var(--ink2)">強調在待人接物中應謙虛有禮，如「毋不敬，儼若思」提倡謹慎和敬重他人。</p></div>
+      <div class="mcell"><b>2 · 守禮與規範</b><p style="font-size:14.4px;color:var(--ink2)">通過規定具體行為方式，讓人們在日常生活中遵守禮法，防止隨意和無序的行為。</p></div>
+      <div class="mcell"><b>3 · 尊卑有序</b><p style="font-size:14.4px;color:var(--ink2)">強調長幼尊卑的倫理秩序，例如「長者先，幼者後」，提倡按照身份和地位行事，維持社會穩定。</p></div>
+      <div class="mcell"><b>4 · 自律與內省</b><p style="font-size:14.4px;color:var(--ink2)">勉勵人們約束自己的行為，保持自律，並經常反省自身，以達到道德提升。</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3><span class="idx">今</span>禮的現代意義</h3>
+    <div class="grid3" style="gap:16px;margin-top:16px">
+      <div class="mcell"><b>秩序規範</b><p style="font-size:14.6px;color:var(--ink2)">強調禮儀標準和行為規範，對現代社會建立良好的社會秩序和規範具有重要啟示。</p></div>
+      <div class="mcell"><b>公民品格</b><p style="font-size:14.6px;color:var(--ink2)">強調倫理道德和內在修養，對於現代社會培養良好公民和個人品格具有積極意義。</p></div>
+      <div class="mcell"><b>價值參照</b><p style="font-size:14.6px;color:var(--ink2)">蘊含豐富的思想內涵和生活智慧，對於當代社會的精神追求和價值觀提供了重要的參考。</p></div>
+    </div>
+    <div class="rule2"></div>
+    <h4>〈曲禮〉在現代社會生活中的應用</h4>
+    <div class="matrix">
+      <div class="mcell"><b>尊重他人 · 謙虛有禮</b><div class="tags"><span>職場中</span><span>日常溝通</span><span>公共場合</span><span>社交媒體</span></div></div>
+      <div class="mcell"><b>自律與反思</b><div class="tags"><span>時間管理</span><span>內省修身</span></div></div>
+      <div class="mcell"><b>建立秩序</b><div class="tags"><span>家庭生活</span><span>社會層面</span></div></div>
+      <div class="mcell"><b>文化活動中的應用</b><div class="tags"><span>教育</span><span>企業文化</span></div></div>
+    </div>
+  </div>
+
+  <div class="card think">
+    <h3><span class="idx">思</span>問題討論 · 劄記</h3>
+    <p style="font-size:15.4px">「悼與耄，雖有罪不加刑焉。」——未成年犯罪與老年人犯罪，是不是可以從輕或減輕處罰？請就禮的精神（敬、仁、恤）與現代法治觀點，寫下你的想法。（內容會自動保存於本機瀏覽器）</p>
+    <textarea id="note" style="margin-top:14px" placeholder="敬錄所思……"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center">
+      <button class="btn" id="saveNote" style="padding:10px 22px;font-size:14px">✎ 存記</button>
+      <button class="btn ghost" id="clearNote" style="padding:10px 22px;font-size:14px">清空</button>
+      <span id="noteMsg" style="color:var(--jade);font-size:14px;letter-spacing:.14em"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 捌 · 測驗 ================= -->
+<section class="juan reveal" id="s8">
+  <div class="juanhead">
+    <span class="num">卷捌</span>
+    <div>
+      <h2>小試身手</h2>
+      <p>十題自測 · 交卷後即見詳解</p>
+    </div>
+  </div>
+  <svg class="orn" viewBox="0 0 400 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="158" y2="12"/><line x1="242" y1="12" x2="400" y2="12"/>
+    <path d="M200 3 L209 12 L200 21 L191 12 Z"/><circle cx="170" cy="12" r="2.6"/><circle cx="230" cy="12" r="2.6"/>
+  </svg>
+
+  <div class="scoreboard" id="board">
+    <div class="n" id="scoreN">0</div>
+    <p id="scoreT">分</p>
+    <div style="margin-top:16px"><button class="btn ghost" id="retry" style="padding:10px 24px;font-size:14px">↻ 重新作答</button></div>
+  </div>
+
+  <div class="quiz" id="quiz"></div>
+  <div style="text-align:center;margin-top:10px">
+    <button class="btn" id="submit">✦ 交 卷 ✦</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="fin">
+    <div>
+      <div class="ft">禮者，敬而已矣</div>
+      <p>本頁依課程講義《1216〈禮記〉選》與《12月16日課程補充講義：「禮」之概談》整理製作，含定義、字源、背景、三禮、成書、婚禮、喪禮、〈曲禮〉課文選讀與現代意義等全部內容。</p>
+    </div>
+    <div class="seal" style="margin:0;transform:rotate(6deg)">曲禮<br>敬讀</div>
+  </div>
+</footer>
+
+<button id="top" aria-label="回到卷首">▲<br>卷首</button>
+
+<script>
+/* ============ 資料 ============ */
+const SIXLI=[
+  {n:'納采',d:'六禮之始。男方遣媒人至女家提親，並致送采擇之禮，表示求婚之意。'},
+  {n:'問名',d:'男方請媒人問女方之名字與生辰，以歸於宗廟占卜吉凶。'},
+  {n:'納吉',d:'卜得吉兆之後，備禮告知女家，婚約於是確定，俗稱「訂婚」（又稱過文定）。'},
+  {n:'納徵',d:'又稱「納幣」。男方向女方致送聘禮，為成婚前的正式手續，聘書、禮書即用於此階段。'},
+  {n:'請期',d:'男方擇定婚期，備禮告知女家，並徵求同意（古禮謙辭曰「請期」，實為告期）。'},
+  {n:'親迎',d:'六禮之成。新郎親赴女家迎娶新娘，奉以歸，行合卺之禮。'}
+];
+const STEPS=[
+  {n:'小殮',s:'第一步',d:'為亡者沐浴、更衣、整容，覆以衾被，安置於堂。此時尚未入棺，故稱「小殮」。（補充說明）'},
+  {n:'報喪',s:'第二步',d:'遣人告知親友訃聞，使遠近知喪。（補充說明）'},
+  {n:'奔喪',s:'第三步',d:'親友聞喪之後，趕赴喪家弔唁。古有〈奔喪〉之禮，記自外地聞喪歸奔之節。（補充說明）'},
+  {n:'停靈',s:'第四步',d:'靈柩停放於堂上，設靈位、香案，以供親友祭拜。（補充說明）'},
+  {n:'守靈',s:'第五步',d:'家屬日夜陪伴守候於靈旁，以示哀思與孝道。（補充說明）'},
+  {n:'大殮',s:'第六步',d:'納屍入棺、封棺之禮，為殮禮之成。（補充說明）'},
+  {n:'出殯和下葬',s:'第七步',d:'發引送葬，將靈柩送往墓地安葬入土，葬禮於是告成；其後有做七、守孝之制。（補充說明）'}
+];
+const WUFU=[
+  {lv:1,n:'斬衰',t:'三年',m:'最粗生麻布製成，不縫邊（斬者，不緝也）',u:'子為父、妻為夫、諸侯為天子（服制最重）'},
+  {lv:2,n:'齊衰',t:'一年至三月不等',m:'粗麻布製成，縫邊整齊（齊者，緝也）',u:'為祖父母、母、夫為妻等'},
+  {lv:3,n:'大功',t:'九月',m:'熟麻布製成，做工較粗',u:'為堂兄弟姊妹、已嫁之姑姊妹等'},
+  {lv:4,n:'小功',t:'五月',m:'較細之熟麻布製成',u:'為曾祖父母、堂伯叔父母等'},
+  {lv:5,n:'緦麻',t:'三月',m:'最細之麻布製成（服制最輕）',u:'為族曾祖父母、表兄弟姊妹等'}
+];
+const WULI=[
+  {n:'吉',t:'祭祀之禮',d:'吉禮：祭祀之禮，敬事鬼神祖先，祈福迎祥，為五禮之首。'},
+  {n:'凶',t:'哀弔之禮',d:'凶禮：逢凶事時所舉行的哀弔禮，如喪禮、荒禮、弔禮，以哀死恤災。'},
+  {n:'賓',t:'國際禮節',d:'賓禮：國際間的一種禮節，諸侯朝見天子、聘問會盟之儀。'},
+  {n:'軍',t:'軍中禮儀',d:'軍禮：軍中的禮儀，如出征、田獵、築城、阅兵之制。'},
+  {n:'嘉',t:'專指婚禮',d:'嘉禮：專指婚禮，兼及冠禮、宴饗、慶賀等和合人際之禮。'}
+];
+const LIFE=[
+  {age:'十年',n:'幼',k:'學',d:'開始外出就學。',x:'學習之始'},
+  {age:'二十',n:'弱',k:'冠',d:'舉行加冠之禮，表示成年；體猶未壯，故曰「弱」。',x:'成年之禮'},
+  {age:'三十',n:'壯',k:'有室',d:'已經結婚，成立家室（結婚後的小家庭）。',x:'成家立室'},
+  {age:'四十',n:'強',k:'而仕',d:'可以出仕做小官，為士治理官府小事，引申為為社會服務。',x:'出仕服務'},
+  {age:'五十',n:'艾',k:'服官政',d:'經驗豐富，辦事老練；可以為大夫，擔任國家重要的工作。',x:'執掌政事'},
+  {age:'六十',n:'耆',k:'指使',d:'音ㄑㄧˊ，衰老。六十始年老體衰，可藉經驗指導、分派工作給別人。',x:'指使後進'},
+  {age:'七十',n:'老',k:'而傳',d:'告老不堪任事，把職責傳承交付後進。',x:'致事傳責'},
+  {age:'八十九十',n:'耄',k:'不加刑',d:'音ㄇㄠˋ，衰老不再工作；雖一時犯錯也不加刑罰。',x:'衰老安養'},
+  {age:'七年',n:'悼',k:'不加刑',d:'可憐愛的意思。七歲以下的兒童，因年少無知，雖一時犯錯也不加刑罰。',x:'年少可憐'},
+  {age:'百年',n:'期',k:'頤',d:'指人生以百年為期，百歲時期已滿。「頤」音ㄧˊ，養也；人生百歲，惟尊老安養而已。',x:'期滿受養'}
+];
+const ZI=[
+  ['儼','ㄧㄢˇ','通「嚴」，端莊持重。'],
+  ['冠','ㄍㄨㄢ','古代二十歲行冠禮，表示成年。'],
+  ['室','ㄕˋ','家室，結婚後的小家庭。'],
+  ['仕','ㄕˋ','為士治理官府小事，引申為為社會服務。'],
+  ['艾','ㄞˋ','經驗豐富，辦事老練。'],
+  ['耆','ㄑㄧˊ','衰老。'],
+  ['指使','ㄓˇ ㄕˇ','六十始年老體衰，可藉經驗指導分派工作給別人。'],
+  ['傳','ㄔㄨㄢˊ','七十告老不堪任事，把職責傳承交付後進。'],
+  ['耄','ㄇㄠˋ','衰老不再工作。'],
+  ['悼','ㄉㄠˋ','可憐愛的意思。'],
+  ['不加刑','—','悼者年少無知，耄者衰老安養而已，雖一時犯錯也不加刑罰。'],
+  ['期','ㄑㄧ','指人生以百年為期，百歲時期已滿。'],
+  ['頤','ㄧˊ','養也。人生百歲惟尊老安養而已。'],
+  ['反','ㄈㄢˇ','通「返」，返回。'],
+  ['面','ㄇㄧㄢˋ','面見父母。'],
+  ['告','ㄍㄠˋ','稟告，指稟告父母。'],
+  ['欠伸','ㄑㄧㄢˋ ㄕㄣ','打呵欠、伸懶腰。'],
+  ['撰','ㄓㄨㄢˋ','執持。撰杖屨：尊長想找枴杖或拿鞋子。'],
+  ['屨','ㄐㄩˋ','鞋子。'],
+  ['蚤','ㄗㄠˇ','通「早」。蚤莫：早晚。'],
+  ['莫','ㄇㄨˋ','通「暮」。視日蚤莫：尊長探問時間早晚。'],
+  ['識','ㄓˋ','記憶。博聞強識：見聞廣博、記憶力強。'],
+  ['竭','ㄐㄧㄝˊ','窮盡。不竭人之忠：不期望別人對自己全心全意的愛戴。'],
+  ['全交','ㄑㄩㄢˊ ㄐㄧㄠ','不勉強、不苛求，朋友之交才能長長久久。']
+];
+
+const PASSAGES=[
+{
+  no:'其一', theme:'待人接物的原則、一切行為的準則以「敬」為基礎', title:'毋不敬章',
+  src:'曲禮曰：「<b class="anno" data-i="0">毋不敬</b>，<b class="anno" data-i="1">儼<ruby>若<rp>(</rp><rt></rt><rp>)</rp></ruby>思</b>，<b class="anno" data-i="2">安定辭</b>，<b class="anno" data-i="3">安民哉</b>！」',
+  notes:[
+    ['毋不敬','禮莫切於敬，應事接物，無一時一事不可以不敬。敬，自我警惕約束之意。'],
+    ['儼若思','儼，通「嚴」，端莊持重。此言儀態端莊持重、若有所思的樣子。'],
+    ['安定辭','說話謹慎、心平氣和的樣子。安：態度平和。定：論點明確，不模稜兩可。辭：說話。'],
+    ['安民哉','如此才能夠使人民（他人）信服安定。']
+  ],
+  trans:'《曲禮》說：一切行為準則皆以「敬」為基礎，態度要端莊持重、若有所思的樣子，說話的時候亦要平和，論點明確、不模稜兩可。這樣才能夠使人信服。',
+  key:'全篇之綱領：禮莫大於「敬」。敬是自我警惕約束，見於儀態（儼若思）與言辭（安定辭），由修身而及於安民。'
+},
+{
+  no:'其二', theme:'人生百年當中，各成長階段遵從禮制的不同要求', title:'人生百年章',
+  src:'「人生十年曰<b class="anno" data-i="0">幼</b>，學。二十曰<b class="anno" data-i="1">弱</b>，<b class="anno" data-i="2">冠</b>。三十曰<b class="anno" data-i="3">壯</b>，<b class="anno" data-i="4">有室</b>。四十曰<b class="anno" data-i="5">強</b>，而<b class="anno" data-i="6">仕</b>。五十曰<b class="anno" data-i="7">艾</b>，<b class="anno" data-i="8">服官政</b>。六十曰<b class="anno" data-i="9">耆</b>，<b class="anno" data-i="10">指使</b>。七十曰<b class="anno" data-i="11">老</b>，而<b class="anno" data-i="12">傳</b>。八十九十曰<b class="anno" data-i="13">耄</b>，七年曰<b class="anno" data-i="14">悼</b>。悼與耄，雖有罪<b class="anno" data-i="15">不加刑</b>焉。百年曰<b class="anno" data-i="16">期</b>，<b class="anno" data-i="17">頤</b>。」',
+  notes:[
+    ['幼','十歲稱幼，開始外出就學。'],
+    ['弱','二十歲體猶未壯，故曰弱。'],
+    ['冠','古代二十歲行冠禮，表示成年。'],
+    ['壯','三十歲氣力強盛，故曰壯。'],
+    ['有室','家室，結婚後的小家庭。'],
+    ['強','四十歲智慮氣力俱強。'],
+    ['仕','為士治理官府小事，引申為為社會服務。'],
+    ['艾','音ㄞˋ，經驗豐富，辦事老練。'],
+    ['服官政','可以為大夫，擔任國家重要的工作。'],
+    ['耆','音ㄑㄧˊ，衰老。'],
+    ['指使','六十始年老體衰，可藉經驗指導分派工作給別人。'],
+    ['老','七十告老，不堪任事。'],
+    ['傳','把職責傳承交付後進。'],
+    ['耄','音ㄇㄠˋ，衰老不再工作。'],
+    ['悼','可憐愛的意思，指七歲以下的兒童。'],
+    ['不加刑','悼者因年少無知，耄者衰老安養而已，雖一時犯錯也不加刑罰。'],
+    ['期','指人生以百年為期，百歲時期已滿。'],
+    ['頤','音ㄧˊ，養也。人生百歲惟尊老安養而已。']
+  ],
+  trans:'人的一生，十歲時稱為「幼」，開始外出就學；到了二十歲時稱為「弱」，舉行加冠之禮；三十歲時稱作「壯」，已經結婚成立家室；四十歲時稱作「強」，可以出仕做小官；五十歲時稱作「艾」，可以執掌一方治理大眾之事；六十歲時稱作「耆」，能憑藉經驗指導別人做事；七十歲時稱為「老」，應把工作責任交付給後人；八十、九十歲時稱作「耄」。七歲以下的兒童被稱作「悼」。這些兒童和八十、九十歲的老人即使犯了罪，也不得施以刑罰。百歲稱作「期」，將得到社會的供養。',
+  key:'禮貫穿一生：由幼學、冠禮、成家、出仕、任政，至指使、致事、安養，各有其分、各有其責；而「悼與耄不加刑」，正見禮制中憐幼恤老的仁心。'
+},
+{
+  no:'其三', theme:'為人子如何孝敬父母與尊事長者，此為家庭倫理之規範', title:'為人子章',
+  src:'夫為人子者：<b class="anno" data-i="0">出必告</b>，<b class="anno" data-i="1">反必面</b>，<b class="anno" data-i="2">所遊必有常</b>，<b class="anno" data-i="3">所習必有業</b>。',
+  notes:[
+    ['出必告','告：稟告，指稟告父母。出門必須將去處稟告父母。'],
+    ['反必面','反：通「返」，返回。面：面見父母。返回時要先面見父母。'],
+    ['所遊必有常','遊：結交者。結交品行端正的朋友，交往有一定常則。'],
+    ['所習必有業','習：修習者。修習課程有一定進度。']
+  ],
+  trans:'為人子，出門必須將去處稟告父母，返回時也要先面見父母。結交品行端正的朋友，修習課程有一定進度，使個人進德修業日益增長，父母就能安心。',
+  key:'孝不在空言，而在「告、面、常、業」四事：使父母知其所往、見其所歸、安其所交、信其所學——此即家庭倫理的實踐。'
+},
+{
+  no:'其四', theme:'回答老師問題及向老師請教時的規矩', title:'侍坐於先生章',
+  src:'侍坐於先生：先生問焉，<b class="anno" data-i="0">終則對</b>。<b class="anno" data-i="1">請業</b>則起，<b class="anno" data-i="2">請益</b>則<b class="anno" data-i="3">起</b>。',
+  notes:[
+    ['終則對','指等問話終了後才能回答，不可搶言。'],
+    ['請業','業：課業。向老師請教課業。'],
+    ['請益','益：進一步說明。課業有所不明白的地方，須要老師更詳加解說。'],
+    ['起','當起身請教老師，以表敬意。']
+  ],
+  trans:'侍候老師坐著時，老師發問，要等問話結束後再回答。課業有所不明白的地方，須要老師更詳加解說，當起身請教老師。',
+  key:'尊師之禮見於應對進退之間：不奪語、不急言，請教必起身——敬其在己者，而後敬其在人者。'
+},
+{
+  no:'其五', theme:'侍坐於君子面前時的規矩，生活禮儀的常規', title:'侍坐於君子章',
+  src:'侍坐於君子，君子<b class="anno" data-i="0">欠伸</b>，<b class="anno" data-i="1">撰杖屨</b>，視日<b class="anno" data-i="2">蚤莫</b>，<b class="anno" data-i="3">侍坐者請出矣</b>。',
+  notes:[
+    ['欠伸','打呵欠、伸懶腰。'],
+    ['撰杖屨','撰：執持。屨：音ㄐㄩˋ，鞋子。指尊長想找枴杖或拿鞋子。'],
+    ['蚤莫','蚤，通「早」；莫，通「暮」。早晚。尊長探問時間早晚。'],
+    ['侍坐者請出矣','侍坐：陪伴長輩坐談。以上所指之事皆示尊長有倦意，侍坐者就該告辭退出。']
+  ],
+  trans:'陪伴著長輩坐談，見尊長者打呵欠、伸懶腰，或想找枴杖或拿鞋子，或是探問時間早晚，侍坐者就該告辭退出。',
+  key:'禮貴察幾：見微知著，體察尊長倦意而主動告辭，不作久留之擾——此為生活禮儀的常規。'
+},
+{
+  no:'其六', theme:'君子所應具的品德要求，進德修業的圭臬', title:'君子章',
+  src:'<b class="anno" data-i="0">博聞強識而讓</b>，<b class="anno" data-i="1">敦善行而不怠</b>，謂之君子。君子<b class="anno" data-i="2">不盡人之歡</b>，<b class="anno" data-i="3">不竭人之忠</b>，以<b class="anno" data-i="4">全交</b>也。',
+  notes:[
+    ['博聞強識而讓','識：音ㄓˋ，記憶。見聞廣博、記憶力強，且能謙讓不自滿，則所學日益精。'],
+    ['敦善行而不怠','修身踐言而力行不懈，則其德日益進。敦：勉力、篤厚。'],
+    ['不盡人之歡','君子不討好別人，以求別人對己無盡的歡喜。'],
+    ['不竭人之忠','君子也不期望別人對自己全心全意的愛戴。竭：窮盡。'],
+    ['全交','不勉強、不苛求，朋友之交才能長長久久。']
+  ],
+  trans:'見聞廣博記憶力強，且能謙讓不自滿，則所學日益精；修身踐言而力行不懈，則其德日益進。這就叫做君子。君子不討好別人，以求別人對己無盡的歡喜；君子也不期望別人，對自己全心全意的愛戴。不勉強、不苛求，朋友之交才能長長久久。',
+  key:'進德修業之圭臬：學貴「讓」，行貴「不怠」；交友貴「不盡不竭」，留餘地而後能全其交。'
+}
+];
+
+const QUIZ=[
+ {q:'「禮」的本字為何？',o:['豐','豊','示','豆'],a:1,e:'禮的本字為「豊」，甲骨文頂部像兩串美玉、底部像有支架的建鼓，合為「擊鼓奏樂」，以美玉敬奉祖先和神靈。'},
+ {q:'「禮」字後來加上「示」部，主要原因為何？',o:['為了與祭祀的「祭」字區分','因為「示」表示祭桌，且「豊」易與「豐」混淆','為了書寫方便而簡化','因為周公制禮作樂時新造'],a:1,e:'因「豊」常被混淆為「豐」，所以在偏旁加上一個「示」字表示祭桌，變成現今的「禮」字。'},
+ {q:'「三禮」之中，敘述周代行政官制和職掌的是哪一部？',o:['《儀禮》','《禮記》','《周禮》','《荀子·禮論》'],a:2,e:'《周禮》敘述周代的行政官制和職掌（政治制度）；《儀禮》記述古代習俗禮儀（禮俗）；《禮記》則為闡釋「禮」的論著（禮的理論）。'},
+ {q:'今本《禮記》即《小戴禮記》，為戴聖所選，共計幾篇？',o:['八十五篇','四十九篇','一百三十一篇','十七篇'],a:1,e:'秦漢間儒者論禮之文凡131篇；漢宣帝時期戴德選85篇為《大戴禮記》（亡），戴聖選49篇為《小戴禮記》，即今本《禮記》，經鄭玄作注、孔穎達作正義，收於《十三經》。'},
+ {q:'「六禮」之中，男方向女方致送聘禮稱為？',o:['納采','問名','納吉','納徵'],a:3,e:'納徵又稱「納幣」，即男方向女方致送聘禮；納采為提親致采擇之禮，問名為問女方名氏生辰，納吉為卜吉後定婚約。'},
+ {q:'五服制度之中，服制最重的一等是？',o:['緦麻','大功','齊衰','斬衰'],a:3,e:'五服依服喪重輕、做工粗細、周期長短分為五等：斬衰、齊衰、大功、小功、緦麻。斬衰最重，用最粗生麻布製成且不縫邊，服期三年。'},
+ {q:'喪俗「做七」，第四十九天的儀式稱為？',o:['斷七','守靈','報喪','大殮'],a:0,e:'親友每七天去靈堂看望並燒紙錢，共七次四十九天，稱「做七」；第四十九天的儀式稱為「斷七」，為正式葬禮部分的結束。'},
+ {q:'「侍坐於君子，君子欠伸，撰杖屨，視日蚤莫，侍坐者請出矣。」此段意謂？',o:['君子應當早起伸展筋骨','尊長已有倦意，侍坐者應主動告辭退出','侍坐者應幫尊長拿枴杖與鞋子','陪伴長輩時應不斷詢問時間'],a:1,e:'打呵欠、伸懶腰、想找枴杖或鞋子、探問時間早晚，皆示尊長有倦意，侍坐者就該告辭退出——禮貴察幾。'},
+ {q:'「博聞強識而讓」的意思為何？',o:['見聞廣博、記憶力強，且能謙讓不自滿','聽聞很多卻仍能推辭官職','博學之人應當辭讓財貨','多聽多記以便與人辯論'],a:0,e:'識，音ㄓˋ，記憶。見聞廣博記憶力強，且能謙讓不自滿，則所學日益精，此為君子之德。'},
+ {q:'「毋不敬，儼若思，安定辭」所揭示的要旨是？',o:['祭祀之時必須恭敬肅穆','一切行為準則以「敬」為基礎，儀態端莊持重，言辭平和明確','為政者應當安定民心','與人交談要多加思索再開口'],a:1,e:'《曲禮》以「敬」為一切行為準則的基礎：毋不敬（無一時一事可不敬）、儼若思（儀態端莊持重）、安定辭（說話平和、論點明確），如此才能使人信服。'}
+];
+
+/* ============ 工具 ============ */
+const $=(s,c=document)=>c.querySelector(s);
+const $$=(s,c=document)=>Array.from(c.querySelectorAll(s));
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+/* ============ 開卷 ============ */
+const curtain=$('#curtain');
+const killCurtain=()=>curtain.classList.add('gone');
+setTimeout(killCurtain,1600);
+curtain.addEventListener('click',killCurtain);
+
+/* ============ 進度 / 回頂 ============ */
+const bar=$('#bar'),topBtn=$('#top');
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
+  bar.style.width=p+'%';
+  topBtn.classList.toggle('show',h.scrollTop>600);
+},{passive:true});
+topBtn.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+/* ============ 選單 ============ */
+const nav=$('#nav');
+$('#menuBtn').addEventListener('click',()=>nav.classList.toggle('open'));
+$$('#nav a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+
+/* ============ 捲動高亮 + 淡入 ============ */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')});
+},{threshold:.08});
+$$('.reveal').forEach(el=>io.observe(el));
+
+const secs=$$('main section[id]');
+const links=$$('#nav a');
+const navIO=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id));
+    }
+  });
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>navIO.observe(s));
+
+/* ============ 分頁籤 ============ */
+$$('[data-tabs]').forEach(g=>{
+  const btns=$$('.tab',g);
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const scope=g.parentElement;
+    $$('.pane',scope).forEach(p=>p.classList.toggle('on',p.id===b.dataset.pane));
+  }));
+});
+
+/* ============ 定義展開 ============ */
+$$('.defitem button').forEach(b=>b.addEventListener('click',()=>{
+  const it=b.parentElement, open=it.classList.contains('open');
+  $$('.defitem',it.parentElement).forEach(x=>{x.classList.remove('open');$('.ex',x).textContent='＋'});
+  if(!open){it.classList.add('open');$('.ex',it).textContent='－';}
+}));
+
+/* ============ 六禮翻牌 ============ */
+$('#sixli').innerHTML=SIXLI.map((s,i)=>`
+ <div class="flip" data-i="${i}"><div class="in">
+   <div class="fc"><div class="no">六禮 · 第${['一','二','三','四','五','六'][i]}禮</div><div class="nm">${s.n}</div><div class="hint">點擊翻轉 ▸ 釋義</div></div>
+   <div class="bc"><b>${s.n}</b>${s.d}</div>
+ </div></div>`).join('');
+$$('#sixli .flip').forEach(f=>f.addEventListener('click',()=>f.classList.toggle('on')));
+
+/* ============ 喪禮流程 ============ */
+$('#steps').innerHTML=STEPS.map((s,i)=>`<button class="step${i===0?' on':''}" data-i="${i}">${s.n}<em>${s.s}</em></button>`).join('');
+const stepbox=$('#stepbox');
+const drawStep=i=>{const s=STEPS[i];stepbox.innerHTML=`<h5>${s.s.replace('第','第 ')} · ${s.n}</h5><p style="font-size:15.4px;color:var(--ink2)">${s.d}</p>`;};
+drawStep(0);
+$$('#steps .step').forEach(b=>b.addEventListener('click',()=>{
+  $$('#steps .step').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');drawStep(+b.dataset.i);
+}));
+
+/* ============ 五服 ============ */
+const diamonds=n=>Array.from({length:5},(_,i)=>`<i class="${i<6-n?'f':''}"></i>`).join('');
+$('#wufu tbody').innerHTML=WUFU.map((w,i)=>`
+ <tr data-i="${i}"><td>${w.n}</td><td><span class="lv">${diamonds(w.lv)}</span></td>
+ <td>${w.t}</td><td style="text-align:left;font-size:14.2px">${w.m}</td><td style="text-align:left;font-size:14.2px">${w.u}</td></tr>`).join('');
+$$('#wufu tbody tr').forEach(tr=>tr.addEventListener('click',()=>{
+  const on=tr.classList.contains('on');
+  $$('#wufu tbody tr').forEach(x=>x.classList.remove('on'));
+  if(!on)tr.classList.add('on');
+}));
+
+/* ============ 五禮 ============ */
+$('#wuli').innerHTML=WULI.map((w,i)=>`
+ <div class="wlicard" data-i="${i}"><div class="sealch">${w.n}</div><b>${w.n}禮</b><span>${w.t}</span></div>`).join('');
+$$('#wuli .wlicard').forEach(c=>c.addEventListener('click',()=>{
+  $('#wuliInfo').innerHTML=WULI[+c.dataset.i].d;
+  $$('#wuli .wlicard').forEach(x=>x.style.borderColor='');
+  c.style.borderColor='var(--cinnabar)';
+}));
+
+/* ============ 人生百年 ============ */
+$('#life').innerHTML=LIFE.map((l,i)=>`<button data-i="${i}" class="${i===0?'on':''}"><b>${l.n}</b>${l.age} · ${l.k}</button>`).join('');
+const lifebox=$('#lifebox');
+const drawLife=i=>{const l=LIFE[i];
+  lifebox.innerHTML=`<div class="big">${l.n}<em>${l.age}曰${l.n} · ${l.x}</em></div>
+  <div><p style="font-size:16px;color:var(--ink2)">${l.d}</p>
+  <p style="margin-top:8px;font-size:14px;color:var(--ink3)">原文對應：「${l.age==='七年'?'七年曰悼':l.age==='八十九十'?'八十九十曰耄':'人生'+l.age+'曰'+l.n+'，'+l.k}」</p></div>`;};
+drawLife(0);
+$$('#life button').forEach(b=>b.addEventListener('click',()=>{
+  $$('#life button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');drawLife(+b.dataset.i);
+}));
+
+/* ============ 字詞表 ============ */
+$('#zitbl tbody').innerHTML=ZI.map(z=>`<tr><td>${z[0]}</td><td style="color:var(--cinnabar)">${z[1]}</td><td style="text-align:left">${z[2]}</td></tr>`).join('');
+
+/* ============ 課文閱讀器 ============ */
+const rail=$('#rail'),pbox=$('#pbox');
+let curP=0, vert=false, fsize=1;
+rail.innerHTML=PASSAGES.map((p,i)=>`<button data-i="${i}" class="${i===0?' on':''}"><em>${p.no}</em><span>${p.title} · ${p.theme.slice(0,16)}…</span></button>`).join('');
+
+function renderPassage(){
+  const p=PASSAGES[curP];
+  pbox.innerHTML=`
+   <div class="rtools">
+     <button class="chip" id="vbtn">${vert?'☰ 橫排閱讀':'▥ 直排閱讀'}</button>
+     <button class="chip" id="fminus">字級 A−</button>
+     <button class="chip" id="fplus">字級 A＋</button>
+     <span class="tag red" style="margin-left:auto">${p.no}</span>
+   </div>
+   <div class="ptitle">${p.title}</div>
+   <div class="psub">${p.theme}</div>
+   <div class="psrc${vert?' vert':''}" id="psrc">${p.src}</div>
+   <div class="pcols">
+     <div class="pbox">
+       <h5>注 釋</h5>
+       <ul class="notelist">${p.notes.map((n,i)=>`<li data-note-idx="${i}"><b>${n[0]}</b>${n[1]}</li>`).join('')}</ul>
+     </div>
+     <div class="pbox">
+       <h5>語 譯</h5>
+       <p class="ptrans">${p.trans}</p>
+     </div>
+   </div>
+   <div class="pkey"><b>要旨 · </b>${p.key}</div>`;
+  applySize();
+  $('#vbtn').addEventListener('click',()=>{vert=!vert;renderPassage();});
+  $('#fminus').addEventListener('click',()=>{fsize=Math.max(0,fsize-1);applySize();});
+  $('#fplus').addEventListener('click',()=>{fsize=Math.min(2,fsize+1);applySize();});
+  $$('#psrc .anno').forEach(a=>a.addEventListener('click',()=>{
+    $$('#psrc .anno').forEach(x=>x.classList.remove('act'));
+    a.classList.add('act');
+    const li=$(`#pbox .notelist li[data-note-idx="${a.dataset.i}"]`);
+    if(li){
+      $$('#pbox .notelist li').forEach(x=>x.classList.remove('hl'));
+      li.classList.add('hl');
+      li.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  }));
+}
+function applySize(){
+  const el=$('#psrc'); if(!el)return;
+  el.classList.remove('big','small');
+  if(fsize===2)el.classList.add('big');
+  if(fsize===0)el.classList.add('small');
+}
+$$('#rail button').forEach(b=>b.addEventListener('click',()=>{
+  $$('#rail button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');curP=+b.dataset.i;renderPassage();
+  pbox.scrollIntoView({behavior:'smooth',block:'start'});
+}));
+renderPassage();
+
+/* ============ 劄記 ============ */
+const note=$('#note'),noteMsg=$('#noteMsg');
+note.value=localStorage.getItem('liji_note')||'';
+$('#saveNote').addEventListener('click',()=>{
+  localStorage.setItem('liji_note',note.value);
+  noteMsg.textContent='已存記於本機 ✓';
+  setTimeout(()=>noteMsg.textContent='',2600);
+});
+$('#clearNote').addEventListener('click',()=>{
+  note.value='';localStorage.removeItem('liji_note');
+  noteMsg.textContent='已清空';setTimeout(()=>noteMsg.textContent='',2000);
+});
+
+/* ============ 測驗 ============ */
+const quizEl=$('#quiz');
+quizEl.innerHTML=QUIZ.map((q,qi)=>`
+ <div class="q" data-q="${qi}">
+   <h5><i>${['一','二','三','四','五','六','七','八','九','十'][qi]}、</i>${q.q}</h5>
+   ${q.o.map((o,oi)=>`<button class="opt" data-o="${oi}">${'甲乙丙丁'[oi]}　${o}</button>`).join('')}
+   <div class="exp"><b style="color:var(--cinnabar)">詳解 · </b>${q.e}</div>
+ </div>`).join('');
+const ans=new Array(QUIZ.length).fill(null);
+let submitted=false;
+$$('#quiz .q').forEach(qEl=>{
+  const qi=+qEl.dataset.q;
+  $$('.opt',qEl).forEach(b=>b.addEventListener('click',()=>{
+    if(submitted)return;
+    $$('.opt',qEl).forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');ans[qi]=+b.dataset.o;
+  }));
+});
+$('#submit').addEventListener('click',()=>{
+  if(submitted)return;
+  if(ans.some(a=>a===null)){
+    alert('尚有未作答之題，請全數填答後再交卷。');
+    const miss=ans.findIndex(a=>a===null);
+    $(`#quiz .q[data-q="${miss}"]`).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  submitted=true;
+  let score=0;
+  $$('#quiz .q').forEach(qEl=>{
+    const qi=+qEl.dataset.q,ok=ans[qi]===QUIZ[qi].a;
+    if(ok)score++;
+    $$('.opt',qEl).forEach(b=>{
+      const oi=+b.dataset.o;
+      b.classList.remove('sel');
+      if(oi===QUIZ[qi].a)b.classList.add('right');
+      else if(oi===ans[qi])b.classList.add('wrong');
+    });
+    $('.exp',qEl).classList.add('show');
+  });
+  const pct=Math.round(score/QUIZ.length*100);
+  $('#scoreN').textContent=pct;
+  let cmt='';
+  if(pct===100)cmt='滿分！禮無不敬，學無不精。';
+  else if(pct>=80)cmt='甚佳！於禮之義理已得其要。';
+  else if(pct>=60)cmt='尚可，宜再溫習字源、三禮與〈曲禮〉諸章。';
+  else cmt='請重讀卷壹至卷柒，再行挑戰。';
+  $('#scoreT').innerHTML=`共 ${QUIZ.length} 題，答對 <b style="color:var(--cinnabar)">${score}</b> 題 —— ${cmt}`;
+  $('#board').classList.add('show');
+  $('#board').scrollIntoView({behavior:'smooth',block:'center'});
+});
+$('#retry').addEventListener('click',()=>{
+  submitted=false;ans.fill(null);
+  $$('#quiz .opt').forEach(b=>b.classList.remove('sel','right','wrong'));
+  $$('#quiz .exp').forEach(e=>e.classList.remove('show'));
+  $('#board').classList.remove('show');
+  quizEl.scrollIntoView({behavior:'smooth',block:'start'});
+});
+</script>
+</body>
+</html>
